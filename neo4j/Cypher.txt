@@ -1,0 +1,39 @@
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "file:C:/Users/caldarola/Desktop/workspace/DBPediaInterface/export/DBpediaRDFResourceDesc.csv" AS csvLine
+CREATE (c: Concept { id: toInt(csvLine.id), URI: csvLine.URI})
+
+CREATE CONSTRAINT ON (c: Concept) ASSERT c.id IS UNIQUE
+
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "file:C:/Users/caldarola/Desktop/workspace/DBPediaInterface/export/TypePropertiesLinks.csv" AS csvLine
+MATCH (src:Concept { id: toInt(csvLine.Sub)}), (dest:Concept { id: toInt(csvLine.Obj)})
+CREATE (src)-[:rdf_type]->(dest)
+
+
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "file:C:/Users/caldarola/Desktop/workspace/WordNetWrapper/WordNet_Words_V1.csv" AS csvLine
+CREATE (w: Word { id: toInt(csvLine.id), wid: csvLine.WID, POS: csvLine.POS, lemma: csvLine.lemma, sid: toInt(csvLine.SID) })
+
+CREATE CONSTRAINT ON (w: Word) ASSERT w.id IS UNIQUE
+
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "file:C:/Users/caldarola/Desktop/workspace/WordNetWrapper/WordNet_LexProp_V1.csv" AS csvLine
+MATCH (src:Word { id: toInt(csvLine.Src)}), (dest:Word { id: toInt(csvLine.Dest)})
+CREATE (src)-[:lexical_property  { type: csvLine.Prop }]->(dest)
+
+
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "file:C:/Users/caldarola/Desktop/workspace/WordNetWrapper/WordNet_SemSynLinks_V1.csv" AS csvLine
+MATCH (src:Word { id: toInt(csvLine.Word)}), (dest:Concept { id: toInt(csvLine.SID)})
+CREATE (src)-[:hasConcept]->(dest)
+
+
+
+Word,SID
+
+
+MATCH (w: Word), (c: Concept)
+WHERE w.sid = c.id
+CREATE (c)-[:hasWord]->(w)
+
+
