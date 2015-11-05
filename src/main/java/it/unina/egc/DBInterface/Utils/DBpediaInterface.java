@@ -39,7 +39,7 @@ import org.apache.jena.util.iterator.ExtendedIterator;
 
 public class DBpediaInterface 
 {
-
+         
 		static FileWriter fileWriter = null;	
 		
 		static final String  DBpediaTBOXFile = "knowledge_base/dbpedia_2014.owl";
