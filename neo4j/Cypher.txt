@@ -1,13 +1,41 @@
-USING PERIODIC COMMIT 1000
-LOAD CSV WITH HEADERS FROM "file:C:/Users/caldarola/Desktop/workspace/DBPediaInterface/export/DBpediaRDFResourceDesc.csv" AS csvLine
-CREATE (c: Concept { id: toInt(csvLine.id), URI: csvLine.URI})
+USING PERIODIC COMMIT 10000
+LOAD CSV WITH HEADERS FROM "file:///Users/caldarola/Desktop/workspace/DBPediaInterface/export/DBpediaRDFResourceDesc.csv" AS csvLine
+CREATE (c: DBPediaResource { id: toInt(csvLine.id), URI: csvLine.URI})
 
-CREATE CONSTRAINT ON (c: Concept) ASSERT c.id IS UNIQUE
+CREATE CONSTRAINT ON (c: DBPediaResource) ASSERT c.id IS UNIQUE
 
-USING PERIODIC COMMIT 1000
-LOAD CSV WITH HEADERS FROM "file:C:/Users/caldarola/Desktop/workspace/DBPediaInterface/export/TypePropertiesLinks.csv" AS csvLine
-MATCH (src:Concept { id: toInt(csvLine.Sub)}), (dest:Concept { id: toInt(csvLine.Obj)})
-CREATE (src)-[:rdf_type]->(dest)
+CREATE INDEX ON :DBPediaResource(URI)
+
+USING PERIODIC COMMIT 10000
+LOAD CSV WITH HEADERS FROM "file:///Users/caldarola/Desktop/workspace/DBPediaInterface/export/TypePropertiesLinks.csv" AS csvLine
+MATCH (src:DBPediaResource { id: toInt(csvLine.Sub)}), (dest:DBPediaResource { id: toInt(csvLine.Obj)})
+CREATE (src)-[:type]->(dest)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+USING PERIODIC COMMIT 10000
+LOAD CSV WITH HEADERS FROM "file:C:/Users/caldarola/Desktop/workspace/DBPediaInterface/export/PropertiesLinks.csv" AS csvLine
+MATCH (src:DBPediaResource { id: toInt(csvLine.Sub)}), (pred:DBPediaResource { id: toInt(csvLine.Pred)}), (dest:DBPediaResource { id: toInt(csvLine.Obj)})
+CREATE (src)-[:p { type: pred.URI}]->(dest)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+START n = node:id (URI = "http://dbpedia.org/ontology/Satellite")
+RETURN n
+
+
+
+OPTIONAL MATCH ()-[r]-()
+WITH r LIMIT 100000 DELETE r;
+
+match (n {URI: 'http://dbpedia.org/resource/Book'})-[r: p]->(m) return n,r,m LIMIT 10 
+
+
+
+match ()-[r]->() return count (r)
+
+START n = node(78)
+MATCH (n)-[r]-(m)
+RETURN n,r,m LIMIT 10
 
 
 USING PERIODIC COMMIT 1000

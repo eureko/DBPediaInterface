@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.rmi.server.ExportException;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.jena.ext.com.google.common.base.Stopwatch;
@@ -24,7 +23,6 @@ import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
@@ -48,7 +46,6 @@ public class DBpediaInterface
 		//static final String  DBpediaSpecificMappingBasedPropertiesFile = "knowledge_base/specific_mappingbased_properties_en.nt";
 		
 		static Stopwatch watch = Stopwatch.createUnstarted();
-		
 		
 		public static void main(String[] args) 
 		{			
