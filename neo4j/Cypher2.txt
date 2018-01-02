@@ -1,0 +1,5 @@
+USING PERIODIC COMMIT 1000
+LOAD CSV FROM "file:///Users/caldarola/Desktop/workspace/DBPediaInterface/knowledge_base/knowledgeBase/Book.csv" AS csvLine
+CREATE (c: Book {URI: csvLine.URI, rdf_schema_label: csvLine.rdf_schema_label, rdf_schema_comment: csvLine.rdf_schema_comment})
+
+

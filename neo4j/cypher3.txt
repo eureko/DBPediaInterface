@@ -1,0 +1,1 @@
+MATCH (b: Book {author_label: 'Stephen King'})-[r]->(w: Writer) RETURN count (r)
